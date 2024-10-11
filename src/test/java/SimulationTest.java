@@ -11,7 +11,7 @@ public class SimulationTest {
 
     @BeforeEach
     public void setup() {
-        simulation = new Simulation(2, 20); // 2 initial bunnies, carrying capacity of 20
+        simulation = new Simulation(2, 20);
     }
 
     @Test
@@ -22,7 +22,7 @@ public class SimulationTest {
 
     @Test
     public void testRunSimulationAddsBunnies() {
-        simulation.runSimulation(5); // Run the simulation for 1 year
+        simulation.runSimulation(5);
         List<Bunny> bunnies = simulation.getBunnies();
         assertTrue(bunnies.size() > 2, "There should be more than 2 bunnies after running the simulation"); // New bunnies should be born
     }
@@ -33,20 +33,20 @@ public class SimulationTest {
 
         // Age all bunnies to make them die
         for (Bunny bunny : bunnies) {
-            bunny.setAge(15); // Set age to 15, they should die at this age
+            bunny.setAge(15);
         }
 
         simulation.removeDeadBunnies();
 
-        bunnies = simulation.getBunnies(); // Get the updated list
+        bunnies = simulation.getBunnies();
         assertEquals(0, bunnies.size(), "All bunnies should be dead, and the list should be empty");
     }
 
     @Test
     public void testResourceUpdateAfterBunnyRemoval() {
-        simulation.runSimulation(1); // Run the simulation for 1 year
+        simulation.runSimulation(1);
         int initialResources = simulation.getBunnies().size();
-        simulation.removeDeadBunnies(); // Remove dead bunnies
+        simulation.removeDeadBunnies();
         assertTrue(simulation.getBunnies().size() <= initialResources, "Population should decrease after removing dead bunnies");
     }
 }

@@ -8,7 +8,7 @@ class BunnyTest {
 
     @BeforeEach
     void setUp() {
-        bunny = new Bunny(1); // Initial generation 1
+        bunny = new Bunny(1);
     }
 
     @Test
@@ -29,8 +29,8 @@ class BunnyTest {
 
     @Test
     void testReproduce() {
-        bunny.ageOneYear(); // Age 1
-        bunny.ageOneYear(); // Age 2 (reproduction age)
+        bunny.ageOneYear();
+        bunny.ageOneYear();
 
         Bunny offspring = bunny.reproduce();
         assertNotNull(offspring, "Bunny should produce an offspring at reproduction age.");
@@ -39,14 +39,14 @@ class BunnyTest {
 
     @Test
     void testReproduceBeforeReproductionAge() {
-        bunny.ageOneYear(); // Age 1
+        bunny.ageOneYear();
         Bunny offspring = bunny.reproduce();
         assertNull(offspring, "Bunny should not produce offspring before reproduction age.");
     }
 
     @Test
     void testDeathDueToMaxAge() {
-        for (int i = 0; i < 7; i++) { // Age the bunny to the maximum age
+        for (int i = 0; i < 7; i++) {
             bunny.ageOneYear();
         }
         assertFalse(bunny.isAlive(), "Bunny should be dead after reaching maximum age.");
@@ -54,8 +54,8 @@ class BunnyTest {
 
     @Test
     void testDeathDueToLowHealth() {
-        bunny.setHealth(10.0); // Set health below the threshold
-        bunny.ageOneYear(); // Bunny ages, health check happens
+        bunny.setHealth(10.0);
+        bunny.ageOneYear();
         assertFalse(bunny.isAlive(), "Bunny should be dead due to low health.");
     }
 
@@ -68,13 +68,12 @@ class BunnyTest {
 
     @Test
     void testMutationRateAfterReproduction() {
-        bunny.ageOneYear(); // Age 1
-        bunny.ageOneYear(); // Age 2 (reproduction age)
+        bunny.ageOneYear();
+        bunny.ageOneYear();
 
         Bunny offspring = bunny.reproduce();
         assertNotNull(offspring, "Bunny should produce an offspring.");
 
-        // Check if the offspring has a mutated reproduction rate within the range
         double expectedMinMutationRate = Math.max(0, bunny.getMutationRate() - 0.05);
         double expectedMaxMutationRate = Math.min(1, bunny.getMutationRate() + 0.05);
 
