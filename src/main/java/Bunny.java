@@ -45,7 +45,7 @@ public class Bunny {
         if (alive) {
             age++;
             if (age >= MAX_AGE || health < HEALTH_THRESHOLD) {
-                alive = false; // Bunny dies after max age or health falls below threshold
+                alive = false;
             }
         }
     }
@@ -71,17 +71,34 @@ public class Bunny {
     public Bunny reproduce() {
         if (canReproduce()) {
             Bunny offspring = new Bunny(generation + 1);
-            // Apply mutations
             if (new Random().nextDouble() < mutationRate) {
                 offspring.mutationRate += (new Random().nextDouble() * 0.2) - 0.1; // mutate between -0.1 and +0.1
                 offspring.mutationRate = Math.max(0, Math.min(offspring.mutationRate, 1.0)); // keep mutation rate in range
             }
             return offspring;
         }
-        return null; // Can't reproduce
+        return null;
     }
 
-
+    /**
+     * Calculates the fitness of the bunny based on environmental factors and its traits.
+     *
+     * <p>The fitness value is determined by considering three factors:
+     * the availability of resources in the environment, the carrying capacity of the environment,
+     * and the bunny's internal traits such as reproduction rate and mutation rate.
+     * A higher fitness score indicates better adaptability to the environment.</p>
+     *
+     * <p>The formula for fitness is:</p>
+     * <ul>
+     * <li><strong>Resource Fitness</strong>: The ratio of resource availability to the environment's carrying capacity.</li>
+     * <li><strong>Trait Fitness</strong>: A value favoring balanced traits between the reproduction rate and mutation rate,
+     * calculated as the inverse of the absolute difference between these two traits.</li>
+     * <li>The final fitness is a product of the bunny's health, resource fitness, and trait fitness.</li>
+     * </ul>
+     *
+     * @param env the environment in which the bunny exists, providing resource availability and carrying capacity
+     * @return the calculated fitness value for the bunny based on its health, environmental conditions, and traits
+     */
     public double calculateFitness(Environment env) {
         double resourceFitness = (double)env.getResourceAvailability() / env.getCarryingCapacity();
         double traitFitness = (1.0 / Math.abs(reproductionRate - mutationRate)); // Favor balanced traits
