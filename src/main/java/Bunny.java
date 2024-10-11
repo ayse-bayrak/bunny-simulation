@@ -24,9 +24,9 @@ public class Bunny {
         this.age = 0;
         this.generation = generation;
         this.reproductionRate = 0.5 + new Random().nextDouble() * 0.5; // between 0.5 and 1.0
-        this.mutationRate = 0.05; // default mutation rate
+        this.mutationRate = 0.05;
         this.alive = true;
-        this.health = 100.0; // initial health
+        this.health = 100.0;
     }
 
     public int getAge() {
@@ -44,10 +44,8 @@ public class Bunny {
     public void ageOneYear() {
         if (alive) {
             age++;
-            if (age >= MAX_AGE) {
-                alive = false; // Bunny dies after max age
-            } else if (health < HEALTH_THRESHOLD) {
-                alive = false; // Bunny dies if health falls below threshold
+            if (age >= MAX_AGE || health < HEALTH_THRESHOLD) {
+                alive = false; // Bunny dies after max age or health falls below threshold
             }
         }
     }
@@ -56,16 +54,38 @@ public class Bunny {
         return alive && age >= REPRODUCTION_AGE;
     }
 
+    /**
+     * Simulates the reproduction process of a Bunny.
+     *
+     * <p>This method checks if the bunny is able to reproduce by invoking the {@code canReproduce()} method.
+     * If eligible, it creates a new Bunny instance representing the offspring.
+     * The offspring inherits certain characteristics from the parent, including the generation number, which is
+     * incremented by 1.</p>
+     *
+     * <p>The method also introduces random genetic mutations. If a randomly generated value is less than the parent's
+     * mutation rate, the offspring's mutation rate is adjusted by a small random value between -0.1 and +0.1.
+     * The mutation rate is kept within the valid range of 0.0 to 1.0.</p>
+     *
+     * @return the new Bunny offspring if reproduction occurs, or {@code null} if the bunny cannot reproduce
+     */
     public Bunny reproduce() {
         if (canReproduce()) {
             Bunny offspring = new Bunny(generation + 1);
             // Apply mutations
             if (new Random().nextDouble() < mutationRate) {
-                offspring.mutationRate += (new Random().nextDouble() * 0.1) - 0.05; // mutate between -0.05 and +0.05
+                offspring.mutationRate += (new Random().nextDouble() * 0.2) - 0.1; // mutate between -0.1 and +0.1
+                offspring.mutationRate = Math.max(0, Math.min(offspring.mutationRate, 1.0)); // keep mutation rate in range
             }
             return offspring;
         }
         return null; // Can't reproduce
+    }
+
+
+    public double calculateFitness(Environment env) {
+        double resourceFitness = (double)env.getResourceAvailability() / env.getCarryingCapacity();
+        double traitFitness = (1.0 / Math.abs(reproductionRate - mutationRate)); // Favor balanced traits
+        return health * resourceFitness * traitFitness;
     }
 
     public void setHealth(double health) {
